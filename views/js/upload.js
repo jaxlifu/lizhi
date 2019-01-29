@@ -1,7 +1,7 @@
  function upload() {
-     var name = document.getElementsByName('name')[0].value
-     var image_school = document.getElementsByName('image_school')[0].files[0]
-     var image_current = document.getElementsByName('image_current')[0].files[0]
+     var name = $("#name")[0].value
+     var image_school = $('#image_school')[0].files[0]
+     var image_current = $('#image_current')[0].files[0]
      console.log('image_school :', image_school)
      console.log('image_current :', image_current)
      if (!name) {
@@ -19,15 +19,16 @@
          return
      }
 
-     $.getJSON("http://127.0.0.1:8080/v1/token", function (result) {
+     $.getJSON("http://lizhi.chongchongshi.com/v1/token", function (result) {
          console.log('object :', result);
-         uploadImage(result.token, `${name}_image_school`, image_school)
-         uploadImage(result.token, `${name}_image_current`, image_current)
+         uploadImage(result.token, `${name}_校园`, image_school)
+         uploadImage(result.token, `${name}_现在`, image_current)
      });
 
 
  }
 
+ var success = 0
 
  // "xhr request failed, code: 400; response: {"
  // error ":"
@@ -46,7 +47,7 @@
          mimeType: null
      }
      var observable = qiniu.upload(image, name, token, putExtra, config)
-
+     $(".loadingLayer").css("display", "inline")
      observable.subscribe({
          next: (res) => {
              // 主要用来展示进度
@@ -58,12 +59,19 @@
          },
          error: (err) => {
              // 失败报错信息
-             console.log(err)
+             $(".loadingLayer").css("display", "none")
              alert("上传失败，请重试！")
          },
          complete: (res) => {
              // 接收成功后返回的信息
-             console.log(domain + res.key)
+             $(".loadingLayer").css("display", "none")
+             success++
+             if (success == 2) {
+                 alert("上传成功，请关闭页面！")
+                 $("#name")[0].value = null
+                 $("#image_school")[0].value = null
+                 $("#image_current")[0].value = null
+             }
          }
      })
  }

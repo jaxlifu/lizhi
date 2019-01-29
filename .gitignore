@@ -3,3 +3,5 @@
 *.tmp
 swagger.*
 swagger/
+vendor/
+Godeps/
