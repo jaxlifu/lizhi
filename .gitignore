@@ -5,3 +5,5 @@ swagger.*
 swagger/
 vendor/
 Godeps/
+pptx/
+download/images/
